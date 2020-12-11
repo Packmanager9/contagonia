@@ -782,7 +782,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         canvas.style.background = style
         window.setInterval(function () {
             main()
-        }, 9)
+        }, 20)
         document.addEventListener('keydown', (event) => {
             keysPressed[event.key] = true;
         });
@@ -800,8 +800,36 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             for (let t = 0; t < countries.length; t++) {
                 if (countries[t].body.isPointInside(TIP_engine)) {
-                    countries[t].infected = 1
+                    countries[t].infected = 1000
                     holesyndrome.countries.push(countries[t])
+                }
+            }
+            for (let t = 0; t < buttons.length; t++) {
+                if (buttons[t].isPointInside(TIP_engine)) {
+                    if(t == 0){
+                        if(holesyndrome.points >= 1){
+                            holesyndrome.points -= 1
+                            holesyndrome.tempmin--
+                        }
+                    }
+                    if(t == 1){
+                        if(holesyndrome.points >= 1){
+                            holesyndrome.points -= 1
+                            holesyndrome.tempmax++
+                        }
+                    }
+                    if(t == 2){
+                        if(holesyndrome.points >= 1){
+                            holesyndrome.points -= 1
+                            holesyndrome.powers[0].infectivity+=.01
+                        }
+                    }
+                    if(t == 3){
+                        if(holesyndrome.points >= 1){
+                            holesyndrome.points -= 1
+                            holesyndrome.powers[0].obviousness+=.01
+                        }
+                    }
                 }
             }
         });
@@ -935,17 +963,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
             if(Math.random()<.3){
                 this.climate = 0
             }
+            // this.climate = 0
 
 
         }
         draw() {
             this.center = new Circle(this.body.x + (this.body.width * .5), this.body.y + (this.body.height * .5), 0, "transparent")
-            this.body.color = `rgba(${0 + ((this.infected / this.population) * 255)},${255 - ((this.infected / this.population) * 255)},0,1)`
+            this.body.color = `rgba(${0 + ((this.infected / this.population) * 255)},${255 - ((this.infected / this.population) * 255)},0,.5)`
             this.body.strokeWidth = this.security
             for (let t = 0; t < this.connections.length; t++) {
                 let link = new LineOP(this.center, this.connections[t].center, this.body.color, 5 + Math.random())
                 links.push(link)
             }
+            this.body.color = `rgba(${0 + ((this.infected / this.population) * 255)},${255 - ((this.infected / this.population) * 255)},0,1)`
             this.body.draw()
         }
 
@@ -960,10 +990,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
     class Contagonia {
         constructor(country) {
+            this.points = 0
             this.type = Math.random() * 4
             this.powers = [] // objects [contagiousness, deadliness, obviousness]
             this.countries = [country]
-            this.countries[0].infected = 1
+            this.countries[0].infected = 0
+            // this.countries[0].body.width *=1.4
             this.totaldead = 0
             this.totalinfected = 0
             this.tempmax = 0
@@ -981,10 +1013,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
             for (let t = 0; t < this.countries.length; t++) {
                 for (let k = 0; k < this.powers.length; k++) {
-                    let changesto = (infsum / (400 - (390 * (this.countries[t].infected / this.countries[t].population)))) * this.countries[t].living
+                    let changesto = (infsum / (10 - (9 * (this.countries[t].infected / this.countries[t].population)))) * this.countries[t].infected  //400 390
                     this.countries[t].infected += changesto
                     this.countries[t].living -= changesto
+                    this.totalinfected += changesto
                     if (this.countries[t].infected > this.countries[t].population) {
+                        this.totalinfected -= (this.countries[t].infected - this.countries[t].population)
                         this.countries[t].infected = this.countries[t].population
                     }
                     for (let g = 0; g < this.countries[t].connections.length; g++) {
@@ -994,13 +1028,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         if ((2 * Math.random() * spreadrat3) > this.countries[t].connections[g].security) {
                             if(this.countries[t].connections[g].climate >= this.tempmin && this.countries[t].connections[g].climate <= this.tempmax){
                                 if (this.countries[t].connections[g].infected == 0) {
-                                    this.countries[t].connections[g].infected = 1
+                                    this.countries[t].connections[g].infected = 400
                                     for (let h = 0; h < 17; h++) {
                                         if (Math.random() < .5) {
-                                            this.countries[t].connections[g].infected += 1
+                                            this.countries[t].connections[g].infected += 100
                                         }
                                     }
                                     this.countries.push(this.countries[t].connections[g])
+                                    this.points+=1
                                 }
                             }
                         }
@@ -1013,19 +1048,39 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     }
 
+    let divider1 = new Rectangle(300,0, 124, 380, "transparent")
+
+    let divider2 = new Rectangle(500 ,500, 500, 50, "transparent")
+
+    let divider3 = new Circle(250 ,500, 120, "transparent")
+
+    let divider4 = new Circle(600 ,200, 50, "transparent")
+
 
     let countries = []
 
-    for (let t = 0; countries.length < 120; t++) {
-        let country = new Country((Math.random() * 85000000) + 15000000, Math.random() * 2)
-        country.body.height = (country.population / 100000000) * 20
+    for (let t = 0; countries.length < 1200; t++) {
+        let country = new Country((Math.random() * 62000000) + 40000000, Math.random() * 2)
+        country.body.height = (country.population / 100000000) * 14
         country.body.width = country.body.height
         let wet = 0
         for (let k = 0; k < countries.length; k++) {
             let link = new LineOP(country.center, countries[k].center)
-            if (link.hypotenuse() < 70) {
+            if (link.hypotenuse() < 35) {
                 wet = 1
             }
+        }
+        if(divider1.isPointInside(country.center)){
+            wet = 1
+        }
+        if(divider2.isPointInside(country.center)){
+            wet = 1
+        }
+        if(divider3.isPointInside(country.center)){
+            wet = 1
+        }
+        if(divider4.isPointInside(country.center)){
+            wet = 1
         }
 
         if (wet == 0) {
@@ -1041,7 +1096,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         for (let k = 0; k < countries.length; k++) {
             if (t != k) {
                 let link = new LineOP(countries[t].center, countries[k].center)
-                if (link.hypotenuse() < 7 * Math.max(countries[t].body.width, countries[k].body.width)) {
+                if (link.hypotenuse() < 55) {  // 3.9 * Math.max(countries[t].body.width, countries[k].body.width
                     countries[t].connections.push(countries[k])
                     countries[k].connections.push(countries[t])
                 }
@@ -1052,10 +1107,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
 
 
+    let buttons = []
+
+    let coldbutton = new Rectangle(720, 500, 50, 50, "cyan")
+
+    let hotbutton = new Rectangle(790, 500, 50, 50, "pink")
+
+
+    let contagiousnessup = new Rectangle(720, 560, 50, 50, "#00FF00")
+
+    let obviousnessup = new Rectangle(790, 560, 50, 50, "yellow")
+
+
+    buttons.push(coldbutton)
+    buttons.push(hotbutton)
+    buttons.push(contagiousnessup)
+    buttons.push(obviousnessup)
     let links = []
 
     let holesyndrome = new Contagonia(countries[0])
-    let gluttonousness = new Power(1.01, 0, 1)
+    let gluttonousness = new Power(0.009, 0, 0.01)
     let guidebox = new Rectangle(700, 0, 350, 700, "gray")
     holesyndrome.powers.push(gluttonousness)
 
@@ -1064,6 +1135,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     setUp(setup_canvas) // setting up canvas refrences, starting timer. 
 
     let counter = 0
+
+    for(let t = 0;t<countries.length;t++){
+        if(countries[t].connections.length == 0){
+            countries.splice(t,1)
+        }
+    }
     function main() {
         canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
         canvas_context.fillStyle = `rgba(0,0,0,.01)`
@@ -1073,6 +1150,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
         counter++
         if (keysPressed['y']) {
             console.log(countries)
+        }
+        if (keysPressed['t']) {
+            holesyndrome.tempmax+=1
+        }
+        if (keysPressed['r']) {
+            holesyndrome.tempmin-=1
         }
         if (counter > 3) {
             for (let t = 0; t < links.length; t++) {
@@ -1084,6 +1167,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
             countries[t].draw()
         }
         guidebox.draw()
+
+        for(let t = 0;t<buttons.length;t++){
+            buttons[t].draw()
+        }
+
+        canvas_context.fillStyle = "Black"
+        canvas_context.font = '20px Arial'
+        canvas_context.fillText(`Infected: ${Math.round(holesyndrome.totalinfected)}`, 720, 50)
+        canvas_context.fillText(`Gene points: ${Math.round(holesyndrome.points)}`, 720, 70)
     }
 
 })
