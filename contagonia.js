@@ -942,14 +942,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
         return (new Shape(shape_array))
     }
 
-    class Map {
-        constructor() {
-            this.selected = {}
+    // class Map {
+    //     constructor() {
+    //         this.selected = {}
 
-        }
+    //     }
 
 
-    }
+    // }
     class Country {
         constructor(people, security) {
             this.living = people
