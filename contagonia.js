@@ -782,7 +782,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         canvas.style.background = style
         window.setInterval(function () {
             main()
-        }, 20)
+        }, 100)
         document.addEventListener('keydown', (event) => {
             keysPressed[event.key] = true;
         });
@@ -800,35 +800,40 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
             for (let t = 0; t < countries.length; t++) {
                 if (countries[t].body.isPointInside(TIP_engine)) {
-                    if(holesyndrome.totalinfected <= 0){
-                        countries[t].infected = 1000
-                        holesyndrome.countries.push(countries[t])
-                    }
                     selected = countries[t]
+                }
+            }
+
+            if(selected.dummy !== 1){
+                if (holesyndrome.totalinfected <= 0) {
+                    if (start.isPointInside(TIP_engine)) {
+                    selected.infected = 1000
+                    holesyndrome.countries.push(selected)
+                    }
                 }
             }
             for (let t = 0; t < buttons.length; t++) {
                 if (buttons[t].isPointInside(TIP_engine)) {
-                    if(t == 0){
-                        if(holesyndrome.points >= 1){
-                            if(holesyndrome.tempmin > -12){
-                            holesyndrome.points -= 1
-                            holesyndrome.tempmin--
+                    if (t == 0) {
+                        if (holesyndrome.points >= 1) {
+                            if (holesyndrome.tempmin > -12) {
+                                holesyndrome.points -= 1
+                                holesyndrome.tempmin--
                             }
                         }
                     }
-                    if(t == 1){
-                        if(holesyndrome.points >= 1){
-                            if(holesyndrome.tempmax < 12){
+                    if (t == 1) {
+                        if (holesyndrome.points >= 1) {
+                            if (holesyndrome.tempmax < 12) {
                                 holesyndrome.points -= 1
                                 holesyndrome.tempmax++
                             }
                         }
                     }
-                    if(t == 2){
-                        if(holesyndrome.points >= 1){
+                    if (t == 2) {
+                        if (holesyndrome.points >= 1) {
                             holesyndrome.points -= 1
-                            holesyndrome.powers[0].infectivity+=.001
+                            holesyndrome.powers[0].infectivity += .00053
                         }
                     }
                     // if(t == 3){
@@ -957,29 +962,29 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.climate = 0
 
             if (Math.random() < .5) {
-                this.climate +=1
+                this.climate += 1
                 if (Math.random() < .8) {
-                    this.climate +=1
+                    this.climate += 1
                     if (Math.random() < .8) {
-                        this.climate +=1
+                        this.climate += 1
                         if (Math.random() < .8) {
-                            this.climate +=1
+                            this.climate += 1
                             if (Math.random() < .5) {
-                                this.climate +=1
+                                this.climate += 1
                                 if (Math.random() < .5) {
-                                    this.climate +=1
+                                    this.climate += 1
                                     if (Math.random() < .5) {
-                                        this.climate +=1
+                                        this.climate += 1
                                         if (Math.random() < .5) {
-                                            this.climate +=1
+                                            this.climate += 1
                                             if (Math.random() < .5) {
-                                                this.climate +=1
+                                                this.climate += 1
                                                 if (Math.random() < .5) {
-                                                    this.climate +=1
+                                                    this.climate += 1
                                                     if (Math.random() < .5) {
-                                                        this.climate +=1
+                                                        this.climate += 1
                                                         if (Math.random() < .5) {
-                                                            this.climate +=1
+                                                            this.climate += 1
                                                         }
                                                     }
                                                 }
@@ -991,30 +996,30 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         }
                     }
                 }
-            }else{
-                this.climate -=1
+            } else {
+                this.climate -= 1
                 if (Math.random() < .8) {
-                    this.climate -=1
+                    this.climate -= 1
                     if (Math.random() < .8) {
-                        this.climate -=1
+                        this.climate -= 1
                         if (Math.random() < .8) {
-                            this.climate -=1
+                            this.climate -= 1
                             if (Math.random() < .5) {
-                                this.climate -=1
+                                this.climate -= 1
                                 if (Math.random() < .5) {
-                                    this.climate -=1
+                                    this.climate -= 1
                                     if (Math.random() < .5) {
-                                        this.climate -=1
+                                        this.climate -= 1
                                         if (Math.random() < .5) {
-                                            this.climate -=1
+                                            this.climate -= 1
                                             if (Math.random() < .5) {
-                                                this.climate -=1
+                                                this.climate -= 1
                                                 if (Math.random() < .5) {
-                                                    this.climate -=1
+                                                    this.climate -= 1
                                                     if (Math.random() < .5) {
-                                                        this.climate -=1
+                                                        this.climate -= 1
                                                         if (Math.random() < .5) {
-                                                            this.climate -=1
+                                                            this.climate -= 1
                                                         }
                                                     }
                                                 }
@@ -1027,7 +1032,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                     }
                 }
             }
-            if(Math.random()<.3){
+            if (Math.random() < .3) {
                 this.climate = 0
             }
             // this.climate = 0
@@ -1038,14 +1043,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.center = new Circle(this.body.x + (this.body.width * .5), this.body.y + (this.body.height * .5), 0, "transparent")
             this.body.color = `rgba(${0 + ((this.infected / this.population) * 255)},${255 - ((this.infected / this.population) * 255)},0,.5)`
             this.body.strokeWidth = this.security
-            if(this.security <= 0){
+            if (this.security <= 0) {
                 this.body.strokeWidth = 0
             }
             for (let t = 0; t < this.connections.length; t++) {
                 let link = new LineOP(this.center, this.connections[t].center, this.body.color, 2)
                 links.push(link)
             }
-            this.body.color = `rgba(${0 + ((this.infected / this.population) * 255)},${255 - ((this.infected / this.population) * 255)},${128-(-(11)*this.climate)},1)`
+            this.body.color = `rgba(${128 + ((this.infected / this.population) * 200) + (11 * this.climate)},${255 - ((this.infected / this.population) * 255)},${128 - (-(11) * this.climate)},1)`
             this.body.draw()
         }
 
@@ -1063,19 +1068,19 @@ window.addEventListener('DOMContentLoaded', (event) => {
             this.points = 10
             this.type = Math.random() * 4
             this.powers = [] // objects [contagiousness, deadliness, obviousness]
-            this.countries = [country]
-            this.countries[0].infected = 0
+            this.countries = []
+            // this.countries[0].infected = 0
             // this.countries[0].body.width *=1.4
             this.totaldead = 0
             this.totalinfected = 0
             this.tempmax = 0
             this.tempmin = 0
 
-            this.invbar = new Rectangle(950, 200, 10, 0, "#00FF00")
+            this.invbar = new Rectangle(980, 200, 10, 0, "#00FF00")
             this.obvbar = new Rectangle(970, 200, 10, 0, "#FFFF00")
             this.deadbar = new Rectangle(990, 200, 10, 0, "red")
-            this.coldbar = new Rectangle(930, 200, 10, 0, "cyan")
-            this.heatbar = new Rectangle(910, 200, 10, 0, "pink")
+            this.coldbar = new Rectangle(940, 200, 10, 0, "cyan")
+            this.heatbar = new Rectangle(900, 200, 10, 0, "pink")
 
         }
         spread() {
@@ -1087,20 +1092,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 infsum += this.powers[k].infectivity
                 deadsum += this.powers[k].deadly
             }
-            this.invbar.height = infsum*1000
-            this.invbar.draw()
-            this.obvbar.height = obvsum*100
-            this.obvbar.draw()
-            this.deadbar.height = deadsum*100
-            this.deadbar.draw()
-
-            this.heatbar.height = (4*this.tempmax)
-            this.coldbar.height = (4*Math.abs(this.tempmin))
-            this.heatbar.draw()
-            this.coldbar.draw()
+            this.invbar.height = infsum * 1000
+            // this.obvbar.height = obvsum * 100
+            // this.obvbar.draw()
+            // this.deadbar.height = deadsum * 100
+            // this.deadbar.draw()
+            this.security =  (infsum / obvsum)*100
+            this.heatbar.height = (4 * this.tempmax)
+            this.coldbar.height = (4 * Math.abs(this.tempmin))
             for (let t = 0; t < this.countries.length; t++) {
                 for (let k = 0; k < this.powers.length; k++) {
-                    let changesto = (infsum / (10 - (9 * (this.countries[t].infected / this.countries[t].population)))) * this.countries[t].infected  //400 390
+                    let changesto = (infsum / (3 - (2.7 * (this.countries[t].infected / this.countries[t].population)))) * this.countries[t].infected  //400 390
                     this.countries[t].infected += changesto
                     this.countries[t].living -= changesto
                     this.totalinfected += changesto
@@ -1113,7 +1115,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                         let spreadrat2 = infsum / obvsum
                         let spreadrat3 = spreadrat1 * spreadrat2
                         if ((2 * Math.random() * spreadrat3) > this.countries[t].connections[g].security) {
-                            if(this.countries[t].connections[g].climate >= this.tempmin && this.countries[t].connections[g].climate <= this.tempmax){
+                            if (this.countries[t].connections[g].climate >= this.tempmin && this.countries[t].connections[g].climate <= this.tempmax) {
                                 if (this.countries[t].connections[g].infected == 0) {
                                     this.countries[t].connections[g].infected = 400
                                     for (let h = 0; h < 17; h++) {
@@ -1122,7 +1124,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
                                         }
                                     }
                                     this.countries.push(this.countries[t].connections[g])
-                                    this.points+=1
+                                    this.points += 1
                                 }
                             }
                         }
@@ -1131,19 +1133,32 @@ window.addEventListener('DOMContentLoaded', (event) => {
             }
         }
 
+        draw(){
+
+            this.invbar.draw()
+            this.heatbar.draw()
+            this.coldbar.draw()
+
+
+            canvas_context.fillStyle = "Black"
+            canvas_context.font = '15px Arial'
+            canvas_context.fillText(`${Math.round(this.tempmax)}`, this.heatbar.x, this.heatbar.y-20)
+            canvas_context.fillText(`${Math.round(this.tempmin)}`, this.coldbar.x, this.coldbar.y-20)
+            canvas_context.fillText(`${Math.floor(this.security*2)}`, this.invbar.x, this.invbar.y-20)
+        }
 
 
     }
 
-    let divider1 = new Rectangle(300,0, 124, 380, "transparent")
+    let divider1 = new Rectangle(300, 0, 124, 380, "transparent")
 
-    let divider2 = new Rectangle(500 ,500, 500, 50, "transparent")
+    let divider2 = new Rectangle(500, 500, 500, 50, "transparent")
 
-    let divider3 = new Circle(250 ,500, 120, "transparent")
+    let divider3 = new Circle(250, 500, 120, "transparent")
 
-    let divider4 = new Circle(600 ,200, 50, "transparent")
+    let divider4 = new Circle(600, 200, 50, "transparent")
 
-    let selecter = new Circle(0,0, 15, "yellow")
+    let selecter = new Circle(0, 0, 15, "yellow")
     let selected = {}
     selected.dummy = 1
 
@@ -1152,7 +1167,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let countries = []
 
     for (let t = 0; countries.length < 1200; t++) {
-        let country = new Country((Math.random() * 62000000) + 40000000, (Math.random() * 8)-2)
+        let country = new Country((Math.random() * 62000000) + 40000000, (Math.random() * 8) - 2)
         country.body.height = (country.population / 100000000) * 14
         country.body.width = country.body.height
         let wet = 0
@@ -1162,16 +1177,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
                 wet = 1
             }
         }
-        if(divider1.isPointInside(country.center)){
+        if (divider1.isPointInside(country.center)) {
             wet = 1
         }
-        if(divider2.isPointInside(country.center)){
+        if (divider2.isPointInside(country.center)) {
             wet = 1
         }
-        if(divider3.isPointInside(country.center)){
+        if (divider3.isPointInside(country.center)) {
             wet = 1
         }
-        if(divider4.isPointInside(country.center)){
+        if (divider4.isPointInside(country.center)) {
             wet = 1
         }
 
@@ -1199,6 +1214,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
     }
 
+    let start = new Rectangle(750, 350, 100, 50, "black")
 
     let buttons = []
 
@@ -1219,7 +1235,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let links = []
 
     let holesyndrome = new Contagonia(countries[0])
-    let gluttonousness = new Power(0.009, 0, 0.01)
+    let gluttonousness = new Power(0.005, 0, 0.01)
     let guidebox = new Rectangle(700, 0, 350, 700, "gray")
     holesyndrome.powers.push(gluttonousness)
 
@@ -1229,33 +1245,33 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
     let counter = 0
 
-    for(let t = 0;t<countries.length;t++){
-        if(countries[t].connections.length == 0){
-            countries.splice(t,1)
+    for (let t = 0; t < countries.length; t++) {
+        if (countries[t].connections.length == 0) {
+            countries.splice(t, 1)
         }
     }
     function main() {
         canvas_context.clearRect(0, 0, canvas.width, canvas.height)  // refreshes the image
-        canvas_context.fillStyle = `rgba(0,0,0,.01)`
-        canvas_context.fillRect(0, 0, canvas.width, canvas.height)
+        // canvas_context.fillStyle = `rgba(0,0,0,.01)`
+        // canvas_context.fillRect(0, 0, canvas.width, canvas.height)
         gamepadAPI.update() //checks for button presses/stick movement on the connected controller)
-   
-        if(selected.dummy !== 1){
+
+        if (selected.dummy !== 1) {
             selecter.x = selected.center.x
             selecter.y = selected.center.y
         }
 
         selecter.draw()
         counter++
-        if (keysPressed['y']) {
-            console.log(countries)
-        }
-        if (keysPressed['t']) {
-            holesyndrome.tempmax+=1
-        }
-        if (keysPressed['r']) {
-            holesyndrome.tempmin-=1
-        }
+        // if (keysPressed['y']) {
+        //     console.log(countries)
+        // }
+        // if (keysPressed['t']) {
+        //     holesyndrome.tempmax += 1
+        // }
+        // if (keysPressed['r']) {
+        //     holesyndrome.tempmin -= 1
+        // }
         if (counter > 4) {
             for (let t = 0; t < links.length; t++) {
                 links[t].draw()
@@ -1267,63 +1283,73 @@ window.addEventListener('DOMContentLoaded', (event) => {
         }
         guidebox.draw()
 
-        for(let t = 0;t<buttons.length;t++){
+        for (let t = 0; t < buttons.length; t++) {
             buttons[t].draw()
         }
-        holesyndrome.spread()
+        if(holesyndrome.totalinfected == 0){
+        start.draw()
+
+        canvas_context.fillStyle = "white"
+        canvas_context.font = '30px Arial'
+        canvas_context.fillText(`Start`, start.x+10, start.y+35)
+        }
+        for(let t = 0;t<5;t++){
+            holesyndrome.spread()
+        }
+        holesyndrome.draw()
         canvas_context.fillStyle = "Black"
         canvas_context.font = '20px Arial'
         canvas_context.fillText(`Total Infected: ${Math.round(holesyndrome.totalinfected)}`, 720, 50)
         canvas_context.fillText(`Gene points: ${Math.round(holesyndrome.points)}`, 720, 70)
 
 
-        if(selected.dummy !== 1){
+        if (selected.dummy !== 1) {
             canvas_context.fillText(`Country: ${selected.name}`, 720, 120)
             canvas_context.fillText(`Temperature: ${selected.climate}`, 720, 140)
-            canvas_context.fillText(`Security: ${Math.round(selected.security*100)}`, 720, 160)
-            if(selected.infected == 0){
+            canvas_context.fillText(`Security: ${Math.round(selected.security * 100)}`, 720, 160)
+            if (selected.infected == 0) {
                 canvas_context.fillText(`Infected: No`, 720, 180)
-            }else{
+            } else {
                 canvas_context.fillText(`Infected: Yes`, 720, 180)
             }
         }
     }
 
-    function randomplanetnames(planet){
+    function randomplanetnames(planet) {
 
         var letters = 'bcdfghjklmnpqrstvwxyz';
         var volesl = 'aeiouyaeiou'
         // var volesl = 'aaaaaaaaaaa'
-        
+
         planet.name = ''
-        let jee = Math.floor(Math.random()*6)+1
+        let jee = Math.floor(Math.random() * 6) + 1
         for (var i = 0; i < jee; i++) {
-            if(Math.random()< 0.03){
-            planet.name += letters[(Math.floor(Math.random() * 21))];
+            if (Math.random() < 0.03) {
+                planet.name += letters[(Math.floor(Math.random() * 21))];
             }
             planet.name += letters[(Math.floor(Math.random() * 21))];
             planet.name += volesl[(Math.floor(Math.random() * 11))];
-            if(Math.random()< 0.06){
+            if (Math.random() < 0.06) {
                 planet.name += volesl[(Math.floor(Math.random() * 11))];
             }
         }
-    
-    
-        let letter = planet.name.charAt(0).toUpperCase() 
+
+
+        let letter = planet.name.charAt(0).toUpperCase()
         let floot = planet.name.split("")
         planet.name = ''
-        for(let l = 1; l<floot.length; l++){
+        for (let l = 1; l < floot.length; l++) {
             planet.name += floot[l]
         }
-            planet.name = letter+(planet.name)
-    
-    
-        if(!names.includes(`${planet.name}`)){
+        planet.name = letter + (planet.name)
+
+
+        if (!names.includes(`${planet.name}`)) {
             names.push(planet.name)
-        }else{
+        } else {
             randomplanetnames(planet)
         }
     }
-    
-    
+
+
 })
